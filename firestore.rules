@@ -1,0 +1,78 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && getUserData().role == 'admin';
+    }
+    
+    function isFarmer() {
+      return isAuthenticated() && getUserData().role == 'farmer';
+    }
+    
+    function isFactoryUser() {
+      return isAuthenticated() && getUserData().role == 'factory';
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Users Collection
+    match /users/{userId} {
+      // Users can read their own data
+      // Admins can read all user data
+      allow read: if isOwner(userId) || isAdmin();
+      
+      // Users can write their own data during registration
+      // Admins can write any user data
+      allow write: if isOwner(userId) || isAdmin();
+    }
+    
+    // Factories Collection
+    match /factories/{factoryId} {
+      // Anyone authenticated can read active factories
+      allow read: if isAuthenticated();
+      
+      // Only admins can create, update, or delete factories
+      allow create, update, delete: if isAdmin();
+    }
+    
+    // Tokens Collection
+    match /tokens/{tokenId} {
+      // Farmers can read their own tokens
+      // Factory users can read tokens for their assigned factory
+      // Admins can read all tokens
+      allow read: if isAuthenticated();
+      
+      // Farmers can create tokens
+      allow create: if isAuthenticated() && 
+        request.resource.data.status == 'pending';
+      
+      // Factory users can update tokens for their factory
+      // Admins can update any token
+      allow update: if isAuthenticated() && (
+        (isFactoryUser() && resource.data.factoryId == getUserData().factoryId) ||
+        isAdmin()
+      );
+      
+      // Only admins can delete tokens
+      allow delete: if isAdmin();
+    }
+    
+    // System Config Collection
+    match /systemConfig/{document=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+  }
+}

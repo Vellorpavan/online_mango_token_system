@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mango Factory System - Architecture Diagrams</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 40px 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: white;
+      text-align: center;
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: rgba(255, 255, 255, 0.9);
+      text-align: center;
+      font-size: 1.2rem;
+      margin-bottom: 40px;
+    }
+
+    .diagram-section {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      margin-bottom: 30px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .diagram-section h2 {
+      color: #667eea;
+      font-size: 2rem;
+      margin-bottom: 30px;
+      border-left: 5px solid #667eea;
+      padding-left: 20px;
+    }
+
+    .diagram {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      border-radius: 15px;
+      padding: 40px;
+      margin-bottom: 20px;
+    }
+
+    .flow-chart {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .flow-row {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .flow-box {
+      background: white;
+      padding: 20px 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      min-width: 200px;
+      text-align: center;
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+
+    .flow-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .flow-box.user {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .flow-box.firebase {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+    }
+
+    .flow-box.database {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: white;
+    }
+
+    .flow-box.action {
+      background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+      color: white;
+    }
+
+    .arrow {
+      font-size: 2rem;
+      color: #667eea;
+    }
+
+    .schema-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .schema-table th {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 15px;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .schema-table td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .schema-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .schema-table tr:hover {
+      background: #f5f7fa;
+    }
+
+    .code-block {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 20px;
+      border-radius: 10px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .keyword { color: #569cd6; }
+    .string { color: #ce9178; }
+    .number { color: #b5cea8; }
+    .comment { color: #6a9955; }
+
+    .architecture-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .arch-card {
+      background: white;
+      border-radius: 10px;
+      padding: 25px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      border-top: 4px solid #667eea;
+    }
+
+    .arch-card h3 {
+      color: #667eea;
+      margin-bottom: 15px;
+      font-size: 1.3rem;
+    }
+
+    .arch-card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .arch-card li {
+      padding: 8px 0;
+      padding-left: 25px;
+      position: relative;
+    }
+
+    .arch-card li:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #43e97b;
+      font-weight: bold;
+    }
+
+    .legend {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin: 20px 0;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .legend-color {
+      width: 30px;
+      height: 30px;
+      border-radius: 5px;
+    }
+
+    @media print {
+      body {
+        background: white;
+        padding: 20px;
+      }
+
+      .diagram-section {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🥭 Mango Factory System</h1>
+    <p class="subtitle">Complete System Architecture & Database Design</p>
+
+    <!-- System Architecture -->
+    <div class="diagram-section">
+      <h2>1. System Architecture Overview</h2>
+      
+      <div class="diagram">
+        <div class="flow-chart">
+          <div class="flow-row">
+            <div class="flow-box user">
+              <h3>👨‍🌾 Farmer</h3>
+              <p>Mobile/Web Interface</p>
+            </div>
+            <div class="flow-box user">
+              <h3>🏭 Factory User</h3>
+              <p>Dashboard</p>
+            </div>
+            <div class="flow-box user">
+              <h3>👨‍💼 Admin</h3>
+              <p>Control Panel</p>
+            </div>
+          </div>
+
+          <div class="arrow">↓</div>
+
+          <div class="flow-row">
+            <div class="flow-box firebase" style="min-width: 400px;">
+              <h3>🔐 Firebase Authentication</h3>
+              <p>Phone OTP Verification</p>
+              <p>Role-Based Access Control</p>
+            </div>
+          </div>
+
+          <div class="arrow">↓</div>
+
+          <div class="flow-row">
+            <div class="flow-box database" style="min-width: 400px;">
+              <h3>💾 Cloud Firestore</h3>
+              <p>Users • Factories • Tokens • Config</p>
+            </div>
+          </div>
+
+          <div class="arrow">↓</div>
+
+          <div class="flow-row">
+            <div class="flow-box action">
+              <h3>📊 Analytics</h3>
+              <p>Performance Tracking</p>
+            </div>
+            <div class="flow-box action">
+              <h3>🔔 Notifications</h3>
+              <p>SMS Updates</p>
+            </div>
+            <div class="flow-box action">
+              <h3>📈 Reports</h3>
+              <p>Daily Statistics</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-color" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+          <span>User Interfaces</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"></div>
+          <span>Firebase Services</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+          <span>Database Layer</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);"></div>
+          <span>Additional Services</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Database Schema -->
+    <div class="diagram-section">
+      <h2>2. Database Schema</h2>
+
+      <h3 style="color: #667eea; margin: 30px 0 15px 0;">📁 Users Collection</h3>
+      <table class="schema-table">
+        <thead>
+          <tr>
+            <th>Field Name</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Required</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>userId</strong></td>
+            <td>String (Document ID)</td>
+            <td>Unique Firebase Auth UID</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>phoneNumber</td>
+            <td>String</td>
+            <td>Format: +919876543210</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>name</td>
+            <td>String</td>
+            <td>User's full name</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>role</td>
+            <td>String</td>
+            <td>farmer | factory | admin</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>factoryId</td>
+            <td>String</td>
+            <td>For factory users only</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>location</td>
+            <td>GeoPoint</td>
+            <td>{lat: number, lng: number}</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>createdAt</td>
+            <td>Timestamp</td>
+            <td>Account creation date</td>
+            <td>✓</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 style="color: #667eea; margin: 30px 0 15px 0;">🏭 Factories Collection</h3>
+      <table class="schema-table">
+        <thead>
+          <tr>
+            <th>Field Name</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Required</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>factoryId</strong></td>
+            <td>String (Document ID)</td>
+            <td>Auto-generated unique ID</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>name</td>
+            <td>String</td>
+            <td>Factory name</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>address</td>
+            <td>String</td>
+            <td>Complete address</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>location</td>
+            <td>GeoPoint</td>
+            <td>{lat: number, lng: number}</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>dailyCapacity</td>
+            <td>Number</td>
+            <td>Max farmers per day</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>contactNumber</td>
+            <td>String</td>
+            <td>Factory contact</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>openingTime</td>
+            <td>String</td>
+            <td>Format: HH:MM (24-hour)</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>closingTime</td>
+            <td>String</td>
+            <td>Format: HH:MM (24-hour)</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>isActive</td>
+            <td>Boolean</td>
+            <td>Factory operational status</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>assignedUserId</td>
+            <td>String</td>
+            <td>Factory user's UID</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>createdAt</td>
+            <td>Timestamp</td>
+            <td>Factory creation date</td>
+            <td>✓</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 style="color: #667eea; margin: 30px 0 15px 0;">🎫 Tokens Collection</h3>
+      <table class="schema-table">
+        <thead>
+          <tr>
+            <th>Field Name</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Required</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>tokenId</strong></td>
+            <td>String (Document ID)</td>
+            <td>Auto-generated unique ID</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>tokenNumber</td>
+            <td>String</td>
+            <td>Format: MF001-20240201-045</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>farmerId</td>
+            <td>String</td>
+            <td>Reference to user document</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>farmerPhone</td>
+            <td>String</td>
+            <td>Farmer's phone number</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>farmerName</td>
+            <td>String</td>
+            <td>Farmer's name</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>factoryId</td>
+            <td>String</td>
+            <td>Reference to factory document</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>factoryName</td>
+            <td>String</td>
+            <td>Factory name (denormalized)</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>date</td>
+            <td>String</td>
+            <td>Format: YYYY-MM-DD</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>status</td>
+            <td>String</td>
+            <td>pending | approved | rejected | completed</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>queuePosition</td>
+            <td>Number</td>
+            <td>Position in daily queue</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>estimatedTime</td>
+            <td>String</td>
+            <td>Format: HH:MM</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>quantity</td>
+            <td>Number</td>
+            <td>Mango quantity in kg</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>mangoType</td>
+            <td>String</td>
+            <td>Variety of mango</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>createdAt</td>
+            <td>Timestamp</td>
+            <td>Token creation time</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>updatedAt</td>
+            <td>Timestamp</td>
+            <td>Last update time</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>completedAt</td>
+            <td>Timestamp</td>
+            <td>Completion time</td>
+            <td>-</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- User Flows -->
+    <div class="diagram-section">
+      <h2>3. User Flow Diagrams</h2>
+
+      <h3 style="color: #667eea; margin: 30px 0 15px 0;">👨‍🌾 Farmer Journey</h3>
+      <div class="diagram">
+        <div class="flow-chart">
+          <div class="flow-box user">Login with Phone + OTP</div>
+          <div class="arrow">↓</div>
+          <div class="flow-box">View Nearby Factories</div>
+          <div class="arrow">↓</div>
+          <div class="flow-box">Select Factory</div>
+          <div class="arrow">↓</div>
+          <div class="flow-box">Enter Quantity & Mango Type</div>
+          <div class="arrow">↓</div>
+          <div class="flow-box action">Generate Token</div>
+          <div class="arrow">↓</div>
+          <div class="flow-box">View Token Details<br>(Number, Queue, Time)</div>
+          <div class="arrow">↓</div>
+          <div class="flow-box">Track Status<br>(Pending → Approved → Completed)</div>
+        </div>
+      </div>
+
+      <h3 style="color: #667eea; margin: 30px 0 15px 0;">🏭 Factory User Journey</h3>
+      <div class="diagram">
+        <div class="flow-chart">
+          <div class="flow-box user">Login with Phone + OTP</div>
+          <div class="arrow">↓</div>
+          <div class="flow-box">View Today's Dashboard</div>
+          <div class="arrow">↓</div>
+          <div class="flow-row">
+            <div class="flow-box firebase">View Pending Tokens</div>
+            <div class="flow-box firebase">View Approved Queue</div>
+            <div class="flow-box firebase">View Completed</div>
+          </div>
+          <div class="arrow">↓</div>
+          <div class="flow-box action">Approve/Reject Tokens</div>
+          <div class="arrow">↓</div>
+          <div class="flow-box action">Mark as Completed</div>
+          <div class="arrow">↓</div>
+          <div class="flow-box">View Daily Statistics</div>
+        </div>
+      </div>
+
+      <h3 style="color: #667eea; margin: 30px 0 15px 0;">👨‍💼 Admin Journey</h3>
+      <div class="diagram">
+        <div class="flow-chart">
+          <div class="flow-box user">Login with Phone + OTP</div>
+          <div class="arrow">↓</div>
+          <div class="flow-box">View Admin Dashboard</div>
+          <div class="arrow">↓</div>
+          <div class="flow-row">
+            <div class="flow-box database">Manage Factories</div>
+            <div class="flow-box database">Manage Users</div>
+            <div class="flow-box database">View All Tokens</div>
+          </div>
+          <div class="arrow">↓</div>
+          <div class="flow-row">
+            <div class="flow-box action">Add/Edit/Delete Factories</div>
+            <div class="flow-box action">Assign Factory Users</div>
+            <div class="flow-box action">View Analytics</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Token Generation Algorithm -->
+    <div class="diagram-section">
+      <h2>4. Token Generation Algorithm</h2>
+
+      <div class="code-block">
+<span class="keyword">async function</span> <span class="string">generateToken</span>(farmerId, factoryId, quantity, mangoType) {
+  <span class="comment">// Step 1: Validate Request</span>
+  <span class="keyword">const</span> today = <span class="keyword">new</span> Date().toISOString().split(<span class="string">'T'</span>)[<span class="number">0</span>];
+  
+  <span class="comment">// Step 2: Check Duplicate</span>
+  <span class="keyword">const</span> existingToken = <span class="keyword">await</span> checkExistingToken(farmerId, factoryId, today);
+  <span class="keyword">if</span> (existingToken) {
+    <span class="keyword">throw new</span> Error(<span class="string">'Token already exists for today'</span>);
+  }
+  
+  <span class="comment">// Step 3: Check Factory Capacity</span>
+  <span class="keyword">const</span> factory = <span class="keyword">await</span> getFactory(factoryId);
+  <span class="keyword">const</span> todayTokenCount = <span class="keyword">await</span> getTodayTokenCount(factoryId, today);
+  
+  <span class="keyword">if</span> (todayTokenCount >= factory.dailyCapacity) {
+    <span class="keyword">throw new</span> Error(<span class="string">'Factory capacity reached'</span>);
+  }
+  
+  <span class="comment">// Step 4: Generate Token Number</span>
+  <span class="keyword">const</span> factoryCode = factory.name.substring(<span class="number">0</span>, <span class="number">2</span>).toUpperCase() + <span class="string">'001'</span>;
+  <span class="keyword">const</span> sequence = todayTokenCount + <span class="number">1</span>;
+  <span class="keyword">const</span> tokenNumber = <span class="string">`${factoryCode}-${today.replace(/-/g, '')}-${String(sequence).padStart(3, '0')}`</span>;
+  
+  <span class="comment">// Step 5: Calculate Queue Position & Time</span>
+  <span class="keyword">const</span> queuePosition = sequence;
+  <span class="keyword">const</span> estimatedTime = calculateEstimatedTime(factory.openingTime, queuePosition);
+  
+  <span class="comment">// Step 6: Create Token Document</span>
+  <span class="keyword">const</span> token = {
+    tokenNumber,
+    farmerId,
+    factoryId,
+    date: today,
+    status: <span class="string">'pending'</span>,
+    queuePosition,
+    estimatedTime,
+    quantity,
+    mangoType,
+    createdAt: Timestamp.now()
+  };
+  
+  <span class="comment">// Step 7: Save to Firestore</span>
+  <span class="keyword">await</span> saveToken(token);
+  
+  <span class="keyword">return</span> token;
+}
+      </div>
+    </div>
+
+    <!-- Technology Stack -->
+    <div class="diagram-section">
+      <h2>5. Technology Stack</h2>
+
+      <div class="architecture-grid">
+        <div class="arch-card">
+          <h3>🎨 Frontend</h3>
+          <ul>
+            <li>React 18+ (Hooks)</li>
+            <li>Tailwind CSS</li>
+            <li>Geolocation API</li>
+            <li>Responsive Design</li>
+            <li>Progressive Web App</li>
+          </ul>
+        </div>
+
+        <div class="arch-card">
+          <h3>🔥 Firebase</h3>
+          <ul>
+            <li>Authentication (Phone OTP)</li>
+            <li>Cloud Firestore</li>
+            <li>Hosting</li>
+            <li>Security Rules</li>
+            <li>Analytics</li>
+          </ul>
+        </div>
+
+        <div class="arch-card">
+          <h3>🛠️ Development</h3>
+          <ul>
+            <li>HTML5 / CSS3</li>
+            <li>JavaScript ES6+</li>
+            <li>Firebase SDK v9+</li>
+            <li>Git Version Control</li>
+            <li>VS Code IDE</li>
+          </ul>
+        </div>
+
+        <div class="arch-card">
+          <h3>🔒 Security</h3>
+          <ul>
+            <li>Role-Based Access</li>
+            <li>Firestore Rules</li>
+            <li>Phone Verification</li>
+            <li>HTTPS Only</li>
+            <li>Input Validation</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Flow -->
+    <div class="diagram-section">
+      <h2>6. Token Status Lifecycle</h2>
+
+      <div class="diagram">
+        <div class="flow-chart">
+          <div class="flow-box" style="background: #fbbf24; color: white;">
+            <strong>PENDING</strong><br>
+            <small>Farmer creates token</small>
+          </div>
+
+          <div class="arrow">↓</div>
+
+          <div class="flow-row">
+            <div class="flow-box" style="background: #10b981; color: white;">
+              <strong>APPROVED</strong><br>
+              <small>Factory accepts</small>
+            </div>
+            <div class="flow-box" style="background: #ef4444; color: white;">
+              <strong>REJECTED</strong><br>
+              <small>Factory declines</small>
+            </div>
+          </div>
+
+          <div class="arrow">↓</div>
+
+          <div class="flow-box" style="background: #6366f1; color: white;">
+            <strong>COMPLETED</strong><br>
+            <small>Transaction done</small>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; padding: 20px; background: #f0f9ff; border-radius: 10px;">
+        <h4 style="color: #0369a1; margin-bottom: 10px;">Status Transition Rules:</h4>
+        <ul style="list-style: none; padding-left: 20px;">
+          <li>✓ <strong>Pending → Approved:</strong> Factory User only</li>
+          <li>✓ <strong>Pending → Rejected:</strong> Factory User only</li>
+          <li>✓ <strong>Approved → Completed:</strong> Factory User only</li>
+          <li>✗ <strong>Approved → Pending:</strong> Not allowed</li>
+          <li>✗ <strong>Completed → Any:</strong> Not allowed (final state)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="text-align: center; padding: 40px 0; color: white;">
+      <p style="font-size: 1.2rem; margin-bottom: 10px;">🥭 Mango Factory Token System</p>
+      <p style="opacity: 0.8;">Complete System Architecture & Database Design</p>
+      <p style="opacity: 0.6; margin-top: 20px;">Built with React + Firebase | Version 1.0 | February 2026</p>
+    </div>
+  </div>
+</body>
+</html>

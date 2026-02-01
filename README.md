@@ -10,7 +10,7 @@
 
 ### **A complete digital solution to eliminate 2-3 day waiting times for mango farmers at factories**
 
-[📱 Live Demo](#[-live-screenshots](https://onlinetoken.netlify.app/)) • [🚀 Quick Start]) • [📚 Documentation]• [🎯 Features]
+[📱 Live Demo](#https://onlinetoken.netlify.app/) • [🚀 Quick Start]) • [📚 Documentation]• [🎯 Features]
 
 </div>
 
@@ -25,11 +25,11 @@
 <table>
 <tr>
 <td width="50%">
-<img src="./screenshots/login-phone.png" alt="Phone Login" width="100%"/>
+<img src="./login.png" alt="Phone Login" width="100%"/>
 <p align="center"><em>Beautiful gradient-based phone login</em></p>
 </td>
 <td width="50%">
-<img src="./screenshots/otp-verification.png" alt="OTP Verification" width="100%"/>
+<img src="./otp.png" alt="OTP Verification" width="100%"/>
 <p align="center"><em>Secure OTP verification</em></p>
 </td>
 </tr>
@@ -48,13 +48,13 @@
 <table>
 <tr>
 <td width="100%">
-<img src="./screenshots/admin-factories.png" alt="Admin Factory Management" width="100%"/>
+<img src="./admin (2).png" alt="Admin Factory Management" width="100%"/>
 <p align="center"><em>Factory Management Dashboard - Manage all factories from one place</em></p>
 </td>
 </tr>
 <tr>
 <td width="100%">
-<img src="./screenshots/admin-users.png" alt="Admin User Directory" width="100%"/>
+<img src="./admin.png" alt="Admin User Directory" width="100%"/>
 <p align="center"><em>User Directory - Complete user management with role-based access</em></p>
 </td>
 </tr>
@@ -73,7 +73,7 @@
 <table>
 <tr>
 <td width="100%">
-<img src="./screenshots/factory-dashboard.png" alt="Factory Dashboard" width="100%"/>
+<img src="./f11.png" alt="Factory Dashboard" width="100%"/>
 <p align="center"><em>Real-time token management with daily capacity tracking and statistics</em></p>
 </td>
 </tr>
@@ -93,7 +93,7 @@
 <table>
 <tr>
 <td width="100%">
-<img src="./screenshots/farmer-booking.png" alt="Farmer Booking" width="100%"/>
+<img src="./f1.png" alt="Farmer Booking" width="100%"/>
 <p align="center"><em>Simple booking interface showing queue status and capacity alerts</em></p>
 </td>
 </tr>

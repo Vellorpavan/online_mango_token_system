@@ -10,7 +10,7 @@
 
 ### **A complete digital solution to eliminate 2-3 day waiting times for mango farmers at factories**
 
-[📱 Live Demo](#https://onlinetoken.netlify.app/) • [🚀 Quick Start]) • [📚 Documentation]• [🎯 Features]
+[📱 Live Demo<a href="https://onlinetoken.netlify.app"> Live Demo </a> • [🚀 Quick Start]) • [📚 Documentation]• [🎯 Features]
 
 </div>
 

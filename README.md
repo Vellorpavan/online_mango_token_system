@@ -12,6 +12,7 @@
 
 [📱 Live Demo](#-live-screenshots) • [🚀 Quick Start](#-quick-start) • [📚 Documentation](#-documentation) • [🎯 Features](#-features)
 
+</div>
 
 ---
 
@@ -612,6 +613,9 @@ Contributions welcome! Please:
 - Mango Farmers - Project inspiration
 
 ---
+
+<div align="center">
+
 ## 🥭 Built with ❤️ for Mango Farmers 🥭
 
 ### **Transforming Agriculture, One Token at a Time**
